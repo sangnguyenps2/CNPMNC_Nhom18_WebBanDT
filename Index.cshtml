@@ -1,0 +1,110 @@
+﻿@model IEnumerable<Ictshop.Models.Sanpham>
+
+@{
+    ViewBag.Title = "ICT SHOP";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Ensure you're using the correct layout path
+}
+
+@if (Session["IdUser"] != null)
+{
+    <h2>Chào mừng bạn đến với ICT SHOP, @Session["NameUser"]!</h2>
+}
+else
+{
+    <h2>Vui lòng đăng nhập để trải nghiệm đầy đủ tính năng.</h2>
+}
+
+<br />
+
+<!-- Hiển thị sản phẩm chính hoặc kết quả tìm kiếm -->
+<div>
+    @if (!string.IsNullOrEmpty(ViewBag.SearchQuery))
+    {
+        if (Model.Any())
+        {
+            <h3>Kết quả tìm kiếm cho: @ViewBag.SearchQuery</h3>
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-3">
+                        <div class="card">
+                            <a href="@Url.Action("XemChiTiet", "Sanpham", new { masp = item.Masp })" class="card-link">
+                                <img src="@Url.Content(item.Anhbia)" class="card-img-top img-responsive" alt="ảnh sản phẩm" />
+                                <div class="card-body">
+                                    <h5 class="card-title">@item.Tensp</h5>
+                                    <p class="card-text">@String.Format("{0:0,0}", item.Giatien) đ</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p>Không có sản phẩm nào được tìm thấy.</p>
+        }
+    }
+    else
+    {
+        <!-- Slide Partial -->
+        <div class="row">
+            <div class="col-md-8">
+                @Html.Action("SlidePartial", "Home")
+            </div>
+            <div class="col-md-4">
+                <img src="~/HinhanhSP/qc3.gif" class="img-responsive" alt="Quảng cáo" />
+                <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+            </div>
+        </div>
+
+        <!-- Search Form -->
+        <div>
+            @using (Html.BeginForm("Index", "Sanpham", FormMethod.Get))
+            {
+                <div class="input-group">
+                    <input type="text" name="query" class="form-control" placeholder="Tìm sản phẩm theo tên hoặc giá" value="@ViewBag.SearchQuery" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+                    </span>
+                </div>
+            }
+        </div>
+
+        <br />
+
+        <!-- Sản phẩm nổi bật -->
+        <div class="spnoibat">
+            <div class="row">
+                <h3>SẢN PHẨM NỔI BẬT</h3>
+                <div class="col-md-4">
+                    @Html.Action("DtiphonePartial", "Sanpham")
+                </div>
+                <div class="col-md-4">
+                    @Html.Action("DtsamsungPartial", "Sanpham")
+                </div>
+                <div class="col-md-4">
+                    @Html.Action("Dtxiaomipartial", "Sanpham")
+                </div>
+            </div>
+        </div>
+
+        <h3>Tất cả sản phẩm</h3>
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-3">
+                    <div class="card">
+                        <a href="@Url.Action("XemChiTiet", "Sanpham", new { masp = item.Masp })" class="card-link">
+                            <img src="@Url.Content(item.Anhbia)" class="card-img-top img-responsive" alt="ảnh sản phẩm" />
+                            <div class="card-body">
+                                <h5 class="card-title">@item.Tensp</h5>
+                                <p class="card-text">@String.Format("{0:0,0}", item.Giatien) đ</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

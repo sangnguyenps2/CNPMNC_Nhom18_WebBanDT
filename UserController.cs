@@ -56,27 +56,21 @@ namespace Ictshop.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Kiểm tra thông tin đăng nhập
                 var foundUser = db.Nguoidungs.FirstOrDefault(u => u.Email == loginModel.Email && u.Matkhau == loginModel.Matkhau);
-
                 if (foundUser == null)
                 {
                     ViewBag.ErrorInfo = "Email hoặc mật khẩu không đúng.";
-                    return View(loginModel); // Trả về view với LoginModel
+                    return View(loginModel);
                 }
 
-                // Nếu thông tin hợp lệ, thiết lập session
+
                 Session["IdUser"] = foundUser.MaNguoiDung;
-                Session["NameUser"] = foundUser.Hoten;
-                Session["UserRole"] = "Nguoidung";
+                Session["use"] = foundUser; 
 
                 return RedirectToAction("Index", "Home");
             }
-
-            // Nếu ModelState không hợp lệ, trả về view với model
             return View(loginModel);
         }
-
 
 
 

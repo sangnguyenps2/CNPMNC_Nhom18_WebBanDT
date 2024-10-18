@@ -11,24 +11,32 @@ namespace Ictshop.Controllers
     {
         public ActionResult Index()
         {
-
             Qlbanhang db = new Qlbanhang();
             var userId = Session["IdUser"];
-            if (userId == null)
+            string query = TempData["SearchQuery"] as string;
+            IEnumerable<Sanpham> products;
+
+            if (!string.IsNullOrEmpty(query))
             {
-                return RedirectToAction("Dangnhap", "User");
+                products = db.Sanphams
+                            .Where(p => p.Tensp.Contains(query) || p.Giatien.ToString().Contains(query))
+                            .ToList();
+
+                ViewBag.SearchQuery = query;
+
+                if (!products.Any())
+                {
+                    ViewBag.Message = "Không có sản phẩm nào được tìm thấy.";
+                }
+            }
+            else
+            {
+                products = db.Sanphams.ToList();
             }
 
-            // Lấy tất cả sản phẩm từ cơ sở dữ liệu
-            var products = db.Sanphams.ToList();
-
-            // Đảm bảo ViewBag.SearchResults không null
-            ViewBag.SearchResults = ViewBag.SearchResults ?? new List<Sanpham>();
-
-            return View(products); // Truyền tất cả sản phẩm đến view
+            return View(products);
         }
 
-    
 
         public ActionResult About()
         {

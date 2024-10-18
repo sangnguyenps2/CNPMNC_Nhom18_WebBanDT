@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Kết quả tìm kiếm cho '@Request.QueryString["searchTerm"]'</h2>
+<h2>Kết quả tìm kiếm cho '@ViewBag.SearchQuery'</h2>
 
 <table class="table">
     <thead>
@@ -20,16 +20,17 @@
         {
             foreach (var item in Model)
             {
-        <tr class="card">
-            <a href="@Url.Action("Detail", "Product", new { id = item.Masp })" class="card-link">
-                <div class="card-body">
-            <td>@item.Tensp</td>
-            <td>@String.Format("{0:0,0}", item.Giatien) VND</td>
-            </div>
-            <a href="@Url.Action("XemChiTiet", "Sanpham", new { masp = item.Masp })">Xem chi tiết</a>
-           
-        </tr>
-                
+                <tr>
+                    <td>
+                        <a href="@Url.Action("XemChiTiet", "Sanpham", new { masp = item.Masp })">
+                            @item.Tensp
+                        </a>
+                    </td>
+                    <td>@String.Format("{0:0,0}", item.Giatien) VND</td>
+                    <td>
+                        <a href="@Url.Action("XemChiTiet", "Sanpham", new { masp = item.Masp })">Xem chi tiết</a>
+                    </td>
+                </tr>
             }
         }
         else

@@ -46,29 +46,16 @@ namespace Ictshop.Controllers
             return View(sanpham);
         }
 
-        public ActionResult Index(string query)
+        public ActionResult Search(string query)
         {
-            IEnumerable<Sanpham> products;
-
             if (!string.IsNullOrEmpty(query))
             {
-                products = db.Sanphams
-                            .Where(p => p.Tensp.Contains(query) || p.Giatien.ToString().Contains(query))
-                            .ToList();
-
-                ViewBag.SearchQuery = query;
-
-                if (!products.Any())
-                {
-                    ViewBag.Message = "Không có sản phẩm nào được tìm thấy.";
-                }
-            }
-            else
-            {
-                products = db.Sanphams.ToList();
+                
+                TempData["SearchQuery"] = query;
+                return RedirectToAction("Index", "Home");
             }
 
-            return View(products);
+            return RedirectToAction("Index", "Home"); 
         }
     }
 }
